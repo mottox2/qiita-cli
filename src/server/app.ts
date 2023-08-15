@@ -10,6 +10,7 @@ import { EmojiRouter } from "./api/emoji";
 import { ItemsRouter } from "./api/items";
 import { ReadmeRouter } from "./api/readme";
 import { config } from "../lib/config";
+import { resolveUrlFromAddress } from "../lib/resolve-url-from-address";
 
 export async function startServer() {
   const app = express();
@@ -39,7 +40,11 @@ export async function startServer() {
     server
       .listen(port, host)
       .once("listening", () => {
-        console.log(`Preview: http://${host}:${port}`);
+        const address = server.address();
+        const url = resolveUrlFromAddress(address);
+        if (url) {
+          console.log(`Preview: ${url}`);
+        }
 
         resolve(server);
       })
